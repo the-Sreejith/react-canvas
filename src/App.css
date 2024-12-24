@@ -1,0 +1,68 @@
+.card, .trayCard, .trayOverlayCard {
+  box-sizing: content-box;
+  height: 100px;
+  width: 100px;
+  padding: 10px;
+  background-color: lightgreen;
+  color:black;
+  cursor: grab
+}
+
+.tray {
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+  width: 100%;
+  /* background-color: grey; */
+  position: absolute;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.canvasWindow {
+  overflow: hidden;
+  background-color:snow;
+}
+
+.toolbar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1000;
+}
+
+.toolbar-button {
+  padding: 8px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.toolbar-button:hover {
+  background-color: #f0f0f0;
+}
+
+.toolbar-button.active {
+  background-color: #e5e5e5;
+}
+
+.divider {
+  width: 1px;
+  height: 16px;
+  background-color: #e5e5e5;
+  margin: 0 4px;
+}

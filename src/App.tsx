@@ -12,12 +12,7 @@ import { Addable } from "./Components/Addable";
 import "./App.css";
 import { Canvas } from "./Components/Canvas";
 import FigmaToolbar from "./Components/Toolbar";
-
-export type Card = {
-  id: UniqueIdentifier;
-  coordinates: Coordinates;
-  text: string;
-};
+import { Card } from "./types/Card";
 
 const trayCards = [
   // the coordinates aren't used for the tray cards, we could create a new type without them

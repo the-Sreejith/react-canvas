@@ -3,7 +3,7 @@ import { DragEndEvent } from "@dnd-kit/core/dist/types";
 import { select } from "d3-selection";
 import { ZoomTransform, zoom } from "d3-zoom";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
-import { Card } from "../App";
+import { Card } from "../types/Card";
 import { Draggable } from "./Draggable";
 
 export const Canvas = ({

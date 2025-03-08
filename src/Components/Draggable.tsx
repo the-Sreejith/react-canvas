@@ -1,6 +1,6 @@
 import { useDraggable } from "@dnd-kit/core";
 import { ZoomTransform } from "d3-zoom";
-import { Card } from "../App";
+import { Card } from "../types/Card";
 
 export const Draggable = ({
   card,

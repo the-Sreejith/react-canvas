@@ -1,16 +1,20 @@
 import { useDraggable } from "@dnd-kit/core";
 import { ZoomTransform } from "d3-zoom";
-import { Card } from "../types/Card";
+import { CanvasElement } from "../types/CanvasElement";
+import { ToolType } from "../types/ToolType";
 
 export const Draggable = ({
-  card,
+  element,
   canvasTransform,
+  activeTool,
 }: {
-  card: Card;
+  element: CanvasElement;
   canvasTransform: ZoomTransform;
+  activeTool: ToolType;
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: card.id,
+    id: element.id,
+    disabled: activeTool !== 'select', // Only allow dragging when select tool is active
   });
 
   return (
@@ -18,9 +22,10 @@ export const Draggable = ({
       className="card"
       style={{
         position: "absolute",
-        top: `${card.coordinates.y * canvasTransform.k}px`,
-        left: `${card.coordinates.x * canvasTransform.k}px`,
+        top: `${element.coordinates.y * canvasTransform.k}px`,
+        left: `${element.coordinates.x * canvasTransform.k}px`,
         transformOrigin: "top left",
+        cursor: activeTool === 'select' ? 'move' : 'default', // Change cursor based on active tool
         ...(transform
           ? {
               // temporary change to this position when dragging
@@ -36,11 +41,13 @@ export const Draggable = ({
       {...attributes}
       // this stops the event bubbling up and triggering the canvas drag
       onPointerDown={(e) => {
-        listeners?.onPointerDown?.(e);
-        e.preventDefault();
+        if (activeTool === 'select') {
+          listeners?.onPointerDown?.(e);
+          e.preventDefault();
+        }
       }}
     >
-      {card.text}
+      {element.type.toString()}
     </div>
   );
 };

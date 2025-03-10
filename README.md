@@ -1,6 +1,6 @@
 # React Canvas Web Application
 
-This project is a React-based canvas web application inspired by tools like Miro and Figma. It leverages the `dnd-kit` library for drag-and-drop functionality.
+This project is a React-based canvas web application inspired by tools like Miro and Figma. It leverages the `dnd-kit` library for drag-and-drop functionality. You can check out the live version [here](canvas.thesreejith.in)
 
 ## Installation
 

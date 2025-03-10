@@ -3,35 +3,40 @@ import { DragEndEvent } from "@dnd-kit/core/dist/types";
 import { select } from "d3-selection";
 import { ZoomTransform, zoom } from "d3-zoom";
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
-import { Card } from "../types/Card";
+import { CanvasElement } from "../types/CanvasElement";
 import { Draggable } from "./Draggable";
+import { ToolType } from "../types/ToolType";
 
 export const Canvas = ({
-  cards,
-  setCards,
+  elements,
+  setElements,
   transform,
   setTransform,
+  activeTool,
+  onCanvasClick,
 }: {
-  cards: Card[];
-  setCards: (cards: Card[]) => void;
+  elements: CanvasElement[];
+  setElements: (cards: CanvasElement[]) => void;
   transform: ZoomTransform;
   setTransform(transform: ZoomTransform): void;
+  activeTool: ToolType;
+  onCanvasClick: (x: number, y: number) => void;
 }) => {
-  const updateDraggedCardPosition = ({ delta, active }: DragEndEvent) => {
+  const updateDraggedElementPosition = ({ delta, active }: DragEndEvent) => {
     if (!delta.x && !delta.y) return;
 
-    setCards(
-      cards.map((card) => {
-        if (card.id === active.id) {
+    setElements(
+      elements.map((element) => {
+        if (element.id === active.id) {
           return {
-            ...card,
+            ...element,
             coordinates: {
-              x: card.coordinates.x + delta.x / transform.k,
-              y: card.coordinates.y + delta.y / transform.k,
+              x: element.coordinates.x + delta.x / transform.k,
+              y: element.coordinates.y + delta.y / transform.k,
             },
           };
         }
-        return card;
+        return element;
       })
     );
   };
@@ -61,13 +66,19 @@ export const Canvas = ({
   useLayoutEffect(() => {
     if (!canvasRef.current) return;
 
-    // get transform change notifications from d3 zoom
     zoomBehavior.on("zoom", updateTransform);
-
-    // attach d3 zoom to the canvas div element, which will handle
-    // mousewheel, gesture and drag events automatically for pan / zoom
     select<HTMLDivElement, unknown>(canvasRef.current).call(zoomBehavior);
-  }, [zoomBehavior, canvasRef, updateTransform]);
+  }, [zoomBehavior, canvasRef, updateTransform, activeTool]);
+
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    if (activeTool === "move") return; // Allow normal pan behavior for move tool
+
+    // Calculate the position in canvas coordinates
+    const x = (e.clientX - transform.x) / transform.k;
+    const y = (e.clientY - transform.y) / transform.k;
+
+    onCanvasClick(x, y);
+  };
 
   return (
     <div ref={updateAndForwardRef} className="canvasWindow">
@@ -79,11 +90,18 @@ export const Canvas = ({
           transform: `translate3d(${transform.x}px, ${transform.y}px, ${transform.k}px)`,
           position: "relative",
           height: "100vh",
+          cursor: activeTool === "square" ? "crosshair" : "default",
         }}
+        onClick={handleCanvasClick}
       >
-        <DndContext onDragEnd={updateDraggedCardPosition}>
-          {cards.map((card) => (
-            <Draggable card={card} key={card.id} canvasTransform={transform} />
+        <DndContext onDragEnd={updateDraggedElementPosition}>
+          {elements.map((element) => (
+            <Draggable
+              element={element}
+              key={element.id}
+              canvasTransform={transform}
+              activeTool={activeTool}
+            />
           ))}
         </DndContext>
       </div>

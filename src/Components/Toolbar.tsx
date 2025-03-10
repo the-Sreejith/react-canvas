@@ -4,10 +4,13 @@ import {
   Square,
   Type,
   Circle,
-  Code,
-  Users,
-  Move
+  Workflow,
+  Move,
+  
 } from 'lucide-react';
+import { ToolType } from '../types/ToolType';
+
+
 
 interface ToolbarButtonProps {
   children: React.ReactNode;
@@ -30,36 +33,57 @@ const ToolbarButton: React.FC<ToolbarButtonProps> = ({
 
 interface ToolbarProps {
   className?: string;
+  activeTool: ToolType;
+  setActiveTool: (tool: ToolType) => void;
 }
 
-const FigmaToolbar: React.FC<ToolbarProps> = ({ className = '' }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ 
+  className = '', 
+  activeTool, 
+  setActiveTool 
+}) => {
   return (
     <div className={`toolbar ${className}`}>
-      <ToolbarButton>
+      <ToolbarButton 
+        isActive={activeTool === 'move'}
+        onClick={() => setActiveTool('move')}
+      >
         <Move size={16} />
       </ToolbarButton>
       <div className="divider" />
-      <ToolbarButton>
+      <ToolbarButton 
+        isActive={activeTool === 'square'}
+        onClick={() => setActiveTool('square')}
+      >
         <Square size={16} />
       </ToolbarButton>
-      <ToolbarButton>
+      <ToolbarButton
+        isActive={activeTool === 'circle'}
+        onClick={() => setActiveTool('circle')}
+      >
         <Circle size={16} />
       </ToolbarButton>
-      <ToolbarButton>
+      <ToolbarButton
+        isActive={activeTool === 'select'}
+        onClick={() => setActiveTool('select')}
+      >
         <MousePointer size={16} />
       </ToolbarButton>
-      <ToolbarButton>
+      <ToolbarButton
+        isActive={activeTool === 'text'}
+        onClick={() => setActiveTool('text')}
+      >
         <Type size={16} />
       </ToolbarButton>
       <div className="divider" />
-      <ToolbarButton>
-        <Code size={16} />
-      </ToolbarButton>
-      <ToolbarButton>
-        <Users size={16} />
+      <ToolbarButton
+        isActive={activeTool === 'flow'}
+        onClick={() => setActiveTool('flow')}
+      >
+        <Workflow size={16} />
       </ToolbarButton>
     </div>
   );
 };
 
-export default FigmaToolbar;
+export default Toolbar;
